@@ -1,2 +1,16 @@
 .*.swp
 .*.swo
+
+build/*
+.gradle/*
+
+tmp/*
+
+.idea/
+
+*.reduced.*
+
+testing/**/*.out
+testing/**/*.exe
+
+example/reduced/
