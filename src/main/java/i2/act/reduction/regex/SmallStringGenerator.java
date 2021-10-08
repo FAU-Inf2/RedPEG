@@ -71,7 +71,7 @@ public final class SmallStringGenerator {
 
     protected boolean consumed;
 
-    protected AtomEnumerator(final Atom.Quantifier quantifier) {
+    protected AtomEnumerator(final Quantifier quantifier) {
       init(quantifier);
     }
 
@@ -79,12 +79,40 @@ public final class SmallStringGenerator {
       /* intentionally left blank -- required for cloning */
     }
 
-    protected void init(final Atom.Quantifier quantifier) {
-      init(
-          ((quantifier == Atom.Quantifier.QUANT_NONE || quantifier == Atom.Quantifier.QUANT_PLUS)
-              ? 1 : 0),
-          ((quantifier == Atom.Quantifier.QUANT_STAR || quantifier == Atom.Quantifier.QUANT_PLUS)
-              ? UNBOUNDED : 1));
+    protected void init(final Quantifier quantifier) {
+      final int _minCount;
+      final int _maxCount;
+      {
+        if (quantifier == null) {
+          _minCount = 1;
+          _maxCount = 1;
+        } else {
+          final Quantifier.Kind quantifierKind = quantifier.getKind();
+
+          switch (quantifierKind) {
+            case QUANT_OPTIONAL: {
+              _minCount = 0;
+              _maxCount = 1;
+              break;
+            }
+            case QUANT_STAR: {
+              _minCount = 0;
+              _maxCount = UNBOUNDED;
+              break;
+            }
+            case QUANT_PLUS: {
+              _minCount = 1;
+              _maxCount = UNBOUNDED;
+              break;
+            }
+            default: {
+              throw new RuntimeException("unknown quantifier: " + quantifierKind);
+            }
+          }
+        }
+      }
+
+      init(_minCount, _maxCount);
     }
 
     protected void init(final int minCount, final int maxCount) {
@@ -690,7 +718,7 @@ public final class SmallStringGenerator {
 
     public RegularExpressionEnumerator(final RegularExpression regularExpression,
         final boolean eachAlternative) {
-      assert (regularExpression.getAlternatives().getQuantifier() == Atom.Quantifier.QUANT_NONE);
+      assert (regularExpression.getAlternatives().getQuantifier() == null);
 
       this.regularExpression = regularExpression;
       this.eachAlternative = eachAlternative;
