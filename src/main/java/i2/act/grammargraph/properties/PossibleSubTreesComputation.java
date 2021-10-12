@@ -2,10 +2,10 @@ package i2.act.grammargraph.properties;
 
 import i2.act.grammargraph.GrammarGraph;
 import i2.act.grammargraph.GrammarGraphEdge;
-import i2.act.grammargraph.GrammarGraphEdge.SequenceEdge;
-import i2.act.grammargraph.GrammarGraphEdge.SequenceEdge.Quantifier;
-import i2.act.grammargraph.GrammarGraphNode.AlternativeNode;
-import i2.act.grammargraph.GrammarGraphNode.SequenceNode;
+import i2.act.grammargraph.GrammarGraphEdge.Element;
+import i2.act.grammargraph.GrammarGraphEdge.Element.Quantifier;
+import i2.act.grammargraph.GrammarGraphNode.Choice;
+import i2.act.grammargraph.GrammarGraphNode.Sequence;
 import i2.act.grammargraph.properties.PropertyComputation;
 import i2.act.grammargraph.properties.subtree.SubTree;
 import i2.act.grammargraph.properties.subtree.SubTreeSequence;
@@ -36,7 +36,7 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
   }
 
   @Override
-  protected final List<SubTreeSequence> init(final AlternativeNode node,
+  protected final List<SubTreeSequence> init(final Choice node,
       final GrammarGraph grammarGraph) {
     if (node.isLeaf()) {
       assert (node.getGrammarSymbol() instanceof LexerSymbol);
@@ -49,7 +49,7 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
   }
 
   @Override
-  protected final List<SubTreeSequence> init(final SequenceNode node,
+  protected final List<SubTreeSequence> init(final Sequence node,
       final GrammarGraph grammarGraph) {
     if (node.numberOfSuccessors() == 0) {
       return Arrays.asList(new SubTreeSequence());
@@ -59,7 +59,7 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
   }
 
   @Override
-  protected final List<SubTreeSequence> transfer(final AlternativeNode node,
+  protected final List<SubTreeSequence> transfer(final Choice node,
       final List<SubTreeSequence> in) {
     if (in == null || !node.hasGrammarSymbol()) {
       return in;
@@ -95,13 +95,13 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
   }
 
   @Override
-  protected final List<SubTreeSequence> transfer(final SequenceNode node,
+  protected final List<SubTreeSequence> transfer(final Sequence node,
       final List<SubTreeSequence> in) {
     return in;
   }
 
   @Override
-  protected final List<SubTreeSequence> confluence(final AlternativeNode node,
+  protected final List<SubTreeSequence> confluence(final Choice node,
       final Iterable<Pair<GrammarGraphEdge<?, ?>, List<SubTreeSequence>>> inSets) {
     final List<SubTreeSequence> possibleSubTreeSequences = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
   }
 
   @Override
-  protected final List<SubTreeSequence> confluence(final SequenceNode node,
+  protected final List<SubTreeSequence> confluence(final Sequence node,
       final Iterable<Pair<GrammarGraphEdge<?, ?>, List<SubTreeSequence>>> inSets) {
     final List<List<SubTreeSequence>> preprocessedInSets = new ArrayList<>();
     {
@@ -131,8 +131,8 @@ public final class PossibleSubTreesComputation extends PropertyComputation<List<
           return null;
         }
 
-        assert (edge instanceof SequenceEdge);
-        final Quantifier quantifier = ((SequenceEdge) edge).getQuantifier();
+        assert (edge instanceof Element);
+        final Quantifier quantifier = ((Element) edge).getQuantifier();
 
         if (quantifier == Quantifier.QUANT_NONE) {
           preprocessedInSets.add(subTreeSequences);

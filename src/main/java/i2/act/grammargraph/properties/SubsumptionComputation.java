@@ -2,9 +2,10 @@ package i2.act.grammargraph.properties;
 
 import i2.act.grammargraph.GrammarGraph;
 import i2.act.grammargraph.GrammarGraphEdge;
-import i2.act.grammargraph.GrammarGraphEdge.SequenceEdge;
-import i2.act.grammargraph.GrammarGraphNode.AlternativeNode;
-import i2.act.grammargraph.GrammarGraphNode.SequenceNode;
+import i2.act.grammargraph.GrammarGraphEdge.Element;
+import i2.act.grammargraph.GrammarGraphEdge.Element.Quantifier;
+import i2.act.grammargraph.GrammarGraphNode.Choice;
+import i2.act.grammargraph.GrammarGraphNode.Sequence;
 import i2.act.grammargraph.properties.PropertyComputation;
 import i2.act.peg.ast.Grammar;
 import i2.act.peg.symbols.ParserSymbol;
@@ -38,7 +39,7 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
   }
 
   @Override
-  protected final Set<Symbol<?>> init(final AlternativeNode node, final GrammarGraph grammarGraph) {
+  protected final Set<Symbol<?>> init(final Choice node, final GrammarGraph grammarGraph) {
     final Set<Symbol<?>> init = new HashSet<>();
 
     if (node.hasGrammarSymbol()) {
@@ -49,7 +50,7 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
   }
 
   @Override
-  protected final Set<Symbol<?>> init(final SequenceNode node, final GrammarGraph grammarGraph) {
+  protected final Set<Symbol<?>> init(final Sequence node, final GrammarGraph grammarGraph) {
     final Set<Symbol<?>> init = new HashSet<>();
 
     if (allElementsOptional(node)) {
@@ -60,7 +61,7 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
   }
 
   @Override
-  protected final Set<Symbol<?>> transfer(final AlternativeNode node, final Set<Symbol<?>> in) {
+  protected final Set<Symbol<?>> transfer(final Choice node, final Set<Symbol<?>> in) {
     final Set<Symbol<?>> out;
 
     if (!node.hasGrammarSymbol() || in.contains(node.getGrammarSymbol())) {
@@ -74,12 +75,12 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
   }
 
   @Override
-  protected final Set<Symbol<?>> transfer(final SequenceNode node, final Set<Symbol<?>> in) {
+  protected final Set<Symbol<?>> transfer(final Sequence node, final Set<Symbol<?>> in) {
     return in;
   }
 
   @Override
-  protected final Set<Symbol<?>> confluence(final AlternativeNode node,
+  protected final Set<Symbol<?>> confluence(final Choice node,
       final Iterable<Pair<GrammarGraphEdge<?, ?>, Set<Symbol<?>>>> inSets) {
     final Set<Symbol<?>> confluence = new HashSet<>();
 
@@ -92,7 +93,7 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
   }
 
   @Override
-  protected final Set<Symbol<?>> confluence(final SequenceNode node,
+  protected final Set<Symbol<?>> confluence(final Sequence node,
       final Iterable<Pair<GrammarGraphEdge<?, ?>, Set<Symbol<?>>>> inSets) {
     final Set<Symbol<?>> confluence = new HashSet<>();
 
@@ -113,8 +114,8 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
     return confluence;
   }
 
-  private static final boolean allElementsOptional(final SequenceNode node) {
-    for (final SequenceEdge successorEdge : node.getSuccessorEdges()) {
+  private static final boolean allElementsOptional(final Sequence node) {
+    for (final Element successorEdge : node.getSuccessorEdges()) {
       if (!isOptionalEdge(successorEdge)) {
         return false;
       }
@@ -123,10 +124,10 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
     return true;
   }
 
-  private static final boolean isOptionalEdge(final SequenceEdge edge) {
-    final SequenceEdge.Quantifier quantifier = edge.getQuantifier();
-    return quantifier == SequenceEdge.Quantifier.QUANT_OPTIONAL
-        || quantifier == SequenceEdge.Quantifier.QUANT_STAR;
+  private static final boolean isOptionalEdge(final Element edge) {
+    final Quantifier quantifier = edge.getQuantifier();
+    return quantifier == Quantifier.QUANT_OPTIONAL
+        || quantifier == Quantifier.QUANT_STAR;
   }
 
   private static final boolean allOtherElementsNullable(
@@ -136,8 +137,8 @@ public final class SubsumptionComputation extends PropertyComputation<Set<Symbol
         continue;
       }
 
-      assert (inSets.get(otherIndex).getFirst() instanceof SequenceEdge);
-      final SequenceEdge edge = (SequenceEdge) inSets.get(otherIndex).getFirst();
+      assert (inSets.get(otherIndex).getFirst() instanceof Element);
+      final Element edge = (Element) inSets.get(otherIndex).getFirst();
       final Set<Symbol<?>> inSet = inSets.get(otherIndex).getSecond();
 
       if (!isOptionalEdge(edge) && !inSet.contains(EMPTY)) {
