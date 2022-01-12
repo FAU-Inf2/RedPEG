@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+message: "Please cite this software using the metadata from 'preferred-citation'."
+title: "RedPEG: A Framework for Test Case Reduction"
+abstract: "This repository contains efficient implementations of the most important
+  (language-agnostic, syntactical) test case reduction techniques from the scientific
+  literature and is also meant to serve as a basis for the development of future techniques."
+authors:
+  - family-names: Kreutzer
+    given-names: Patrick
+    affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+  - family-names: Kunze
+    given-names: Tom
+    affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+  - family-names: Philippsen
+    given-names: Michael
+    affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+    orcid: "https://orcid.org/0000-0002-3202-2904"
+license: MIT
+repository-code: "https://github.com/FAU-Inf2/RedPEG"
+preferred-citation:
+  authors:
+    - family-names: Kreutzer
+      given-names: Patrick
+      affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+    - family-names: Kunze
+      given-names: Tom
+      affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+    - family-names: Philippsen
+      given-names: Michael
+      affiliation: "Programming Systems Group, Friedrich-Alexander University Erlangen-Nürnberg (FAU), Germany"
+      orcid: "https://orcid.org/0000-0002-3202-2904"
+  title: "Test Case Reduction: A Framework, Benchmark, and Comparative Study"
+  type: conference-paper
+  abstract: "Given a program that triggers a bug in a compiler (or other kind of language processor), the goal of
+    test case reduction is to cut away all code that is irrelevant for the bug, i.e., to generate a smaller program
+    that still induces the bug. Research has proposed several language-agnostic reduction techniques that automatically
+    reduce bug-inducing programs in arbitrary programming languages, but there is no large-scale, conclusive evaluation
+    of these algorithms yet. Furthermore, the development of new algorithms is hampered by the unavailability of
+    comparable implementations of previous techniques and of diverse test programs that trigger different bugs in real
+    compilers. To close these gaps and to foster future research in this area, this paper makes three contributions:
+    (1) A framework that includes efficient, fine-tuned implementations of 6 state-of-the-art reducers,
+    (2) a diverse benchmark that comprises 321 fuzzer-generated programs in two programming languages that trigger 110
+    different bugs in real compilers, and (3) a comparative study that builds upon our framework and benchmark and
+    compares the reduction techniques w.r.t. their effectiveness and efficiency. Our results show that there is no
+    reduction technique yet that performs best across all test cases and languages. Our framework and benchmark are
+    available online and we provide the necessary scripts and tools to replicate our study."
+  doi: "10.1109/ICSME52107.2021.00012"
+  conference:
+    name: "ICSME'21: International Conference on Software Maintenance and Evolution"
+    city: Virtual
+    country: LU
+  date-published: "2021-09-27"
+  year: 2021
+  month: 9
+  start: 58
+  end: 69
+  issn: "2576-3148"
